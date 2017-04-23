@@ -1,19 +1,7 @@
 
-# coding: utf-8
-
-# In[103]:
-
-sc
-
-
-# In[104]:
-
+#sc
 import csv
 from datetime import datetime, timedelta
-
-
-# In[105]:
-
 def getgeo(partID, records):
     if partID == 0:
         records.next()
@@ -30,10 +18,6 @@ rdd = sc.textFile('citibike.csv')
 geo = rdd.mapPartitionsWithIndex(getgeo).collect()
 geo=geo[0]
 geo=(float(geo[0]), float(geo[1]))
-geo
-
-
-# In[106]:
 
 def getgeo(partID, records):
     if partID == 0:
@@ -47,14 +31,9 @@ def getgeo(partID, records):
             starttime.append(row[3].split(' ')[1])
     return starttime 
             
-    #return lon_lat.keys()
 
 rdd = sc.textFile('citibike.csv')
 biketime = rdd.mapPartitionsWithIndex(getgeo).collect()
-#print biketime
-
-
-# In[108]:
 
 def findpair(partID, records):
     if partID == 0:
@@ -63,8 +42,8 @@ def findpair(partID, records):
     reader = csv.reader(records)
     
     from geopy.distance import great_circle
-  
-    taxitime = []
+
+    taxitime []
     for row in reader:
         if (row[0].split(' ')[0] == '2015-02-01')&(row[4] != 'NULL') & (row[5] != 'NULL'):
             end = ( float(row[4]) , float(row[5]))
@@ -76,22 +55,13 @@ def findpair(partID, records):
 
 rdd = sc.textFile('yellow.csv.gz')
 taxitime = rdd.mapPartitionsWithIndex(findpair).collect()
-#print taxitime
 
-
-# In[109]:
 
 starttime = map(lambda x: (datetime.strptime(x.split('+')[0], '%H:%M:%S') ,
                            datetime.strptime(x.split('+')[0], '%H:%M:%S')+timedelta(minutes = 10)) , biketime)
 starttime=map(lambda x: (x[0].time(),x[1].time()), starttime)
 
-
-# In[110]:
-
 taxitime = map(lambda x: datetime.strptime(x[:7], '%H:%M:%S').time() ,taxitime)
-
-
-# In[111]:
 
 count = 0
 for i in taxitime:
