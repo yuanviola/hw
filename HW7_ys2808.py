@@ -62,6 +62,7 @@ if __name__ == "__main__":
         print("Usage: spark-submit sort <inputfile> <outputfile>", file=sys.stderr)
         exit(-1)
 
+    sc = SparkContext(appName="PythonSort")
 
     import csv
     from datetime import datetime, timedelta
@@ -76,8 +77,8 @@ if __name__ == "__main__":
 
     
     rdd = sc.textFile('/user/ys2808/yellow.csv.gz')
-    taxitime = rdd.mapPartitionsWithIndex(findpair).collect()
-    taxitime.saveAsTextFile('/user/ys2808/hw7')
-    print taxitime
+    count = rdd.mapPartitionsWithIndex(findpair)
+    count.saveAsTextFile('/user/ys2808/hw7')
+    print (count.collect())
 
     sc.stop()
